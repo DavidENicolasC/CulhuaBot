@@ -1,5 +1,6 @@
 ///LLAVE DEL BOT
-const mySecret = process.env['token']
+const mySecret = "ODY4MjgwMTAyNjMzNTAwNjk0.YPtW3A.Q5excUkJdUkNnxmB8-RR387xTDs";
+//const mySecret = process.env['token']
 
 ///SERVICIO DE LA PAGINA WEB
 const express = require('express')
@@ -28,7 +29,7 @@ function presence() {
 
 //Se ejecuta al encenderse el bot
 client.on("ready", () => {
-  console.log("Estoy listo!");
+  console.log("¡CulhuaBot listo!");
   presence();
 });
 
