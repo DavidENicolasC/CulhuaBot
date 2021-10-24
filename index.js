@@ -70,31 +70,104 @@ client.on("message", (msj) => {
         msj.channel.send( embed );
         
         msj.delete();
-    }/*else
+    }else
     //Enlace a libro
     if( msj.content.startsWith( "!libro" ) ) {
         let link = msj.content.slice(6);
-        if( link.startsWith( ' ' ) ) {
+        if( link.startsWith( ' ' ) ) 
+		{
             link = link.slice(1);
         }
         
         let tit = msj.content;
         
-        if( link.startsWith( "{titulo}" ) ) {
-            
-        }else {
+        if( link.startsWith( "{titulo}" ) ) 
+		{
+			men = men.slice(8);		//Se salta el comando {titulo}
+    		if( men.startsWith(' ') ) //Se salta el posible espacio
+    	    	men = men.slice(1);
+			
+			//Comienza a capturar el titulo
+			var title = "**Libro**: ";
+			var i = 0;
+			while( i<men.length && men[i+1] != '{' ) 
+			{
+				title += men[i++];	
+			}
+			men = men.slice(i+1);
+
+			//Estas líneas asumen que el comando {autor} estará presente y lo saltan
+			men = men.slice(7);
+			if( men.startsWith( ' ' ) )
+				men = men.slice(i+1);
+
+			//Comienza a capturar el autor
+			var desc;
+			i = 0;
+			desc += "**Autor**: ";
+			while( i<men.length && men[i+1] != '{' )
+			{
+				desc += men[i++];
+			}
+			desc += '\n';
+			men = men.slice(i+1);
+
+			//Estas líneas asumen que el comando {edicion} estará presente y lo saltan
+			men = men.slice(9);
+			if( men.startsWith( ' ' ) )
+				men = men.slice(i+1);
+
+			//Comienza a capturar la edición
+			i = 0;
+			desc += "**Edición**: "
+			while( i<men.length && men[i+1] != '{' )
+			{
+				desc += men[i++];
+			}
+			desc += '\n';
+			men = men.slice(i+1);
+
+			//Estas líneas asumen que el comando {editorial} estará presente y lo saltan
+			men = men.slice(11);
+			if( men.startsWith( ' ' ) )
+				men = men.slice(i+1);
+
+			//Comienza a capturar la editorial
+			i = 0;
+			desc += "**Editorial**: ";
+			while( i<men.length && men[i+1] != '{' )
+			{
+				desc += men[i++];
+			}
+
+			//Ya procesado, se envia el mensaje
+			const embed = Discord.MessageEmbed()
+
+			.setTitle( title )
+			.setDescription( desc )
+
+			//client.channels.resolve( "864918094585528370" ).send( embed );
+			console.log( title );
+			console.log( desc );
+		}
+		else //El usuario quiere saber como utilizar el comando libro
+		{
             const embed = new Discord.MessageEmbed()
             
-            .setTitle( "¿Cómo publicar un libro" )
-            .setDescription( "Todos los comandos que siguen deben ir en un solo mensaje y en el orden en que se listan, para evitar errores" )
-            .addField( "Agregar título al libro", "Escribe ***{titulo}*** seguido de un espacio y el título del libro\nEjemplo: {titulo} Titulo de Ejemplo" )
-            .addField
+            .setTitle( "¿Cómo compartir un libro con la comunidad?" )
+            .setDescription( "Todos los comandos deben ir **en un solo mensaje** y en el orden en que se listan, para evitar errores" )
+            .addField( "Título del libro", "Seguido de ***{titulo}***, escribe un espacio y el título del libro\n\nEjemplo: {titulo} Algebra" )
+            .addField( "Autor del libro", "Seguido de ***{autor}***, escribe un espacio y el nombre del autor del libro\n\nEjemplo: {autor} Armando G." )
+			.addField( "Edición del libro", "Seguido de ***{edicion}***, escribe un espacio y la edicion del libro\n\nEjemplo: {edicion} 3ra ed." )
+			.addField( "Editorial del libro", "Seguido de ***{editorial}***, escribe un espacio y la editorial del libro\n\nEjemplo: {editorial} McGraw Hill" )
+			.addField( "Portada del libro", "Seguido de ***{portada}***, escribe un espacio y el link a la imagen de portada del libro\n\nEjemplo: {portada} https://www.sitiodellibro.com/laportadadellibro.jpg" )
+			.addField( "Copia este formato en tu mensaje, e ingresa los datos como expliqué arriba", "!libro {titulo} El titulo de tu libro {autor} El autor del libro {edicion} la edicion del libro {editorial} la editorial del libro {portada} https://www.sitiodellibro.com/laportadadellibro.jpg" )
+
+			msj.channel.send( embed );	//Envia el mensaje en el mismo canal que se invocó
         }
         
-        client.channels.resolve( "864918094585528370" ).send( link );
-        
         msj.delete();
-    }*/else
+    }else
     //Invitar a Platica
     if( msj.content.startsWith( "!charla") ) {
 			let men = msj.content.slice(7);
