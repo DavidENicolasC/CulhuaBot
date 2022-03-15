@@ -1,0 +1,11 @@
+# Variables de entorno (los tokens)
+.env
+
+# Configuracion de repl.it
+.replit
+
+# Linting para JS
+.eslintrc.json
+
+# Configuracion de VSCode
+.vscode
