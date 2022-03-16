@@ -49,13 +49,14 @@ culhuabot.on("message", (msj) => {
         .setColor(0x0389A9)
         .setTitle('Comando !twitter')
         .setDescription('Subcomandos')
-        .addField('follow - Sigue a un usuario y publica sus tweets en un canal', '**!twitter followto _id_ _#canal_**\nEl id del usuario lo puedes obtener de: https://tweeterid.com/')
+        .addField('follow - Sigue a un usuario y publica sus tweets en un canal', '**!twitter follow _id_ _#canal_**\n\nEj: **!twitter follow 0302842 #avisos**\n\nEl id del usuario lo puedes obtener de: https://tweeterid.com/')
         .setThumbnail('https://am-pm.co.uk/wp-content/uploads/2015/04/twitter-icon.gif')
 
       msj.channel.send(embed)
     } else
     //SUBCOMANDO FOLLOW - SIGUE AL USUARIO INDICADO Y PUBLICA SUS TWEETS EN UN CANAL
     if (msj.content.length > 0 && msj.content.startsWith('follow')) {
+      
       //EL MENSAJE VIENE DE LA FORMA: FOLLOW ID <#ID_CANAL>
 
       //SE SALTA LOS CARACTERES FOLLOW Y SI HAY UN ESPACIO, SE LO SALTA
@@ -69,6 +70,7 @@ culhuabot.on("message", (msj) => {
         let i = 1
         while (i < msj.content.length && (msj.content[i] !== ' ' && msj.content[i] !== '<')) { user += msj.content[i++] }
         msj.content = msj.content.slice(i + 1)
+        if(msj.content.length > 0 && msj.content.startsWith(' ')) { msj.content.slice(1) }
       }
 
       let channel
@@ -84,6 +86,7 @@ culhuabot.on("message", (msj) => {
       //EL BOT DE TWITTER COMIENZA A SEGUIR LOS TWEETS DEL USUARIO INDICADO
       tweets = tweetbot.stream('statuses/filter', { follow: [user] })
 
+      //CONFIRMA EN EL CANAL DONDE SE EJECUTO EL COMANDO !TWITTER EL USUARIO Y EL CANAL DE DISCORD
       msj.channel.send( `Se publicaran los tweets del usuario con id: ${user} en: <#${channel}>` )
 
       //OCURRE QUE EL USUARIO DE TWITTER HA TWITTEADO
@@ -99,7 +102,7 @@ culhuabot.on("message", (msj) => {
           DE LO CONTRARIO, MUESTRA EL ERROR EN LA CONSOLA*/
           try {
             culhuabot.channels.fetch(channel).then(canal => {
-              canal.send('@' + tweet.user.screen_name + ' twitteó:\n' + url)
+              canal.send('@' + tweet.user.screen_name + ' twitteó:\n\n' + url)
             }).catch(error => {
               console.log(error)
             })
@@ -113,4 +116,4 @@ culhuabot.on("message", (msj) => {
 });
 
 //EL BOT DE DISCORD SE COMUNICA CON LA API DE DISCORD
-culhuabot.login( process.env.DISCORD_TOKEN ); 
+culhuabot.login( process.env.DISCORD_TOKEN );
