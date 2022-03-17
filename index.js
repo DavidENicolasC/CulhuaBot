@@ -36,8 +36,9 @@ var tweetbot = new Twit({
 //ESTE OBJETO REPRESENTA AL BOT DE DISCORD
 const culhuabot = new Discord.Client();
 
-//REPRESENTA A LA VARIABLE QUE "MIRARÁ" TWITTER DETECTANDO LOS TWEETS
-var tweets;
+//EL BOT DE TWITTER COMIENZA A SEGUIR LOS TWEETS DEL USUARIO INDICADO. TWEETS REPRESENTA EL STREAM
+var tweets = tweetbot.stream('statuses/filter', { follow: users_id })
+
 
 //EL BOT DE DISCORD SE COMUNICA CON LA API DE DISCORD
 culhuabot.login( process.env.DISCORD_TOKEN );
@@ -49,7 +50,7 @@ culhuabot.on("ready", () => {
 });
 
 //SE EJECUTA CUANDO SE ENVIA UN MENSAJE AL SERVIDOR
-tweets = culhuabot.on("message", (msj) => {
+culhuabot.on("message", (msj) => {
   //OCURRE QUE EL USUARIO ENVIA UN MENSAJE QUE EMPIEZA CON EL COMANDO !TWITTER
   if (msj.content.length > 0 && msj.content.startsWith('!twitter')) {
     
@@ -120,9 +121,6 @@ tweets = culhuabot.on("message", (msj) => {
         console.log( 'Ocurrio un error al intentar realizar la operacion de encontrar canal:\n' + error );
       }
 
-      //EL BOT DE TWITTER COMIENZA A SEGUIR LOS TWEETS DEL USUARIO INDICADO
-      tweets = tweetbot.stream('statuses/filter', { follow: users_id })
-
       //OCURRE QUE EL USUARIO DE TWITTER HA TWITTEADO
       tweets.on('tweet', function (tweet) {
 
@@ -172,6 +170,11 @@ tweets = culhuabot.on("message", (msj) => {
         else {  //CUANDO EL AUTOR NO ES EL USUARIO AL QUE SEGUIMOS, LO INFORMA EN LA CONSOLA DEL PROGRAMADOR. ES UNA BUENA MANERA DE ASEGURARSE DE QUE EL STREAMING SIGUE CONECTADO
           console.log( 'El usuario detectado no es valido' );  
         }
+      })
+      tweets.on('disconnect', function(mensajeDesconeccion) {
+        console.log("El stream de Twitter se ha desconectado");
+        tweets.stop();
+        tweets.start();
       })
     }
   }
